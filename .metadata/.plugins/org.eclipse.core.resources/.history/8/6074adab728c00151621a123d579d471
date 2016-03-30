@@ -1,0 +1,56 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class dbTest {
+    public static void main(String[] args) {
+        MarketDB rest = new MarketDB();
+        System.out.println(rest.testConnection());      
+        rest.resetDB();
+        
+        rest.addMenuItem(1, "ham", 5); 
+        rest.addMenuItem(2, "chicken", 4);
+        rest.addMenuItem(3, "beef", 6);
+        rest.deleteMenuItem(2);
+        rest.updateItemPrice(3, 7);
+        rest.addEmployee(1,  "John",  "Snow",  88000);
+        rest.addEmployee(2,  "Jack",  "Smith",  82000);
+        rest.updateSalary(2,  75000);
+        rest.deleteEmployee(1);
+        Connection c = rest.getConn();
+        Statement s;
+        try{
+            s = c.createStatement();
+            ResultSet allFoods = s.executeQuery("select * from menu");
+            
+            while (allFoods.next()){
+                System.out.println(allFoods.getInt("id") +"\t"+
+                                   allFoods.getString("name")+"\t"+
+                                   allFoods.getInt("price"));
+            }
+            allFoods.close();
+            
+            ResultSet searchResults = rest.findMenuItem("I");
+            while (searchResults.next()){
+                    System.out.println(searchResults.getString("username"));
+            }
+                        
+        } catch (Exception e){
+            System.out.println("Error getting a menu resultSet"+e);
+        }
+        
+        try{
+            s = c.createStatement();
+            ResultSet allEmployees = s.executeQuery("select * from staff");
+            while (allEmployees.next()){
+                System.out.println("\n"+allEmployees.getInt("id") +"\t"+
+                                   allEmployees.getString("firstName")+"\t"+
+                                   allEmployees.getString("lastName")+"\t"+
+                                   allEmployees.getInt("salary"));
+            }
+            allEmployees.close();
+        } catch (Exception e){
+            System.out.println("Error error getting staff resultSet... "+e);
+        }
+    }
+}

@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Nov 19 15:37:51 EET 2015:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.8.3.2 - (1557835): instance a816c00e-0151-1ff7-2c48-0000063838c0 
+on database directory /Users/jcarle1025/Documents/ACG/OO Programming/Project/restaurantDB  with class loader java.net.URLClassLoader@279f2327 
+Loaded from rsrc:./
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_60-b27
+user.dir=/Users/jcarle1025/Documents/ACG/OO Programming/Project
+os.name=Mac OS X
+os.arch=x86_64
+os.version=10.10.5
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

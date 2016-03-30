@@ -1,0 +1,30 @@
+1447582407044	Rename field 'userid'
+1447582422115	Rename field 'password'
+1447582432427	Rename field 'foodName'
+1447582475115	Rename local variable 'userid'
+1447582484178	Rename local variable 'password'
+1447584663615	Rename field 'name'
+1447584693491	Rename field 'price'
+1447584712638	Rename local variable 'name'
+1447584721683	Rename local variable 'price'
+1447587250445	Rename type 'MenuI'
+1447587266811	Rename type 'Restaurant'
+1447587278237	Rename type 'RestaurantI'
+1447681482244	Rename local variable 'local'
+1447681838122	Rename local variable 'allProds'
+1447685949880	Rename local variable 'allFoods'
+1447685982988	Rename local variable 'allEmployees'
+1447701396208	Rename method 'createMenuTable'
+1447701422158	Rename method 'dropMenuTable'
+1447701502601	Rename method 'addMenuItem'
+1447701541074	Rename method 'deleteMenuItem'
+1447701576220	Rename method 'updateItemPrice'
+1447701596805	Rename method 'findMenuItem'
+1447703012363	Move method
+1447703018231	Move method
+1447703023481	Move method
+1447703030202	Move method
+1447703032545	Move method
+1447703036723	Move method
+1447703040603	Move method
+1447775523402	Rename local variable 'menuItems'

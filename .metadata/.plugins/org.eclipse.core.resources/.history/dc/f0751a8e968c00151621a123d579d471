@@ -1,0 +1,65 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class dbTest {
+    public static void main(String[] args) {
+        MarketDB rest = new MarketDB();
+        System.out.println(rest.testConnection());      
+        //rest.resetDB();
+        rest.dropMenuTable();
+        if(rest.addMenuItem(1,  "ham",  5) == 0)
+        	rest.createMenuTable();
+        rest.addMenuItem(1, "ham", 5);
+        rest.addMenuItem(2, "chicken", 4);
+        rest.addMenuItem(3, "beef", 6);
+        rest.addMenuItem(4,  "cheese",  3);
+        rest.deleteMenuItem(2);
+        rest.updateItemPrice(3, 7);
+        
+        rest.dropStaffTable();
+        if(rest.addEmployee(1,  "John",  "Snow",  88000) == 0)
+        	rest.createStaffTable();
+        rest.addEmployee(1,  "John",  "Snow",  88000);
+        rest.addEmployee(2,  "Jack",  "Smith",  82000);
+        rest.updateSalary(2,  75000);
+        rest.deleteEmployee(1);
+        Connection c = rest.getConn();
+        Statement s;
+        try{
+            s = c.createStatement();
+            ResultSet menuItems = s.executeQuery("select * from menu");
+            System.out.println("Menu Table:");
+            while (menuItems.next()){
+                System.out.println(menuItems.getInt("id") +"\t"+
+                                   menuItems.getString("name")+"\t"+
+                                   menuItems.getInt("price"));
+            }
+            menuItems.close();
+            
+            ResultSet searchResults = rest.findMenuItem("I");
+            while (searchResults.next()){
+                    System.out.println(searchResults.getString("username"));
+            }
+                        
+        } catch (Exception e){
+            System.out.println("Error getting a menu resultSet"+e);
+        }
+        
+        try{
+            s = c.createStatement();
+            ResultSet employees = s.executeQuery("select * from staff");
+            System.out.println("\nStaff Table:");
+            
+            while (employees.next()){
+                System.out.println(employees.getInt("id") +"\t"+
+                                   employees.getString("firstName")+"\t"+
+                                   employees.getString("lastName")+"\t"+
+                                   employees.getInt("salary"));
+            }
+            employees.close();
+        } catch (Exception e){
+            System.out.println("Error error getting staff resultSet... "+e);
+        }
+    }
+}

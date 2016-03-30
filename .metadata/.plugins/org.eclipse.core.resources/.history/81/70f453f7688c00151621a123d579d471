@@ -1,0 +1,63 @@
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class dbTest {
+    public static void main(String[] args) {
+        
+        MarketDB rest = new MarketDB();
+//        myDB other = new myDB("otherDB", "root", "root");
+        
+        //returns bool -- remember to change project properties, libraries, and tell them to look at external to
+        //use for drivers (the derby jar) by addJAR/Directory
+        System.out.println(rest.testConnection());
+//        System.out.println(other.testConnection());       
+        rest.resetDB();
+        rest.addMenuItem(3, "ham", 5); 
+        rest.deleteMenuItem(2);
+        rest.updateItemPrice(3, 7);
+        
+        //always need a connection object -- and a statement to run on that connection
+        Connection c = rest.getConn();
+        Statement s;
+        try{
+            s = c.createStatement();
+            //execute SQL command that are given as arguments
+            //selects all rows and cols from the users table and store them in a ResultSet called 'allUsers'
+            ResultSet allFoods = s.executeQuery("select * from menu");
+            
+            while (allFoods.next()){
+                //printing out fields as are defined on the table ("users" table in this case)
+                System.out.println(allFoods.getInt("id") +"\t"+
+                                   allFoods.getString("name")+"\t"+
+                                   allFoods.getInt("price"));
+            }
+            allFoods.close();
+            
+            ResultSet searchResults = rest.findMenuItem("I");
+            while (searchResults.next()){
+                    System.out.println(searchResults.getString("username"));
+            }
+                        
+        } catch (Exception e){
+            System.out.println("Error getting a resultSet"+e);
+        }
+        
+        try{
+            s = c.createStatement();
+            //execute SQL command that are given as arguments
+            //selects all rows and cols from the users table and store them in a ResultSet called 'allUsers'
+            ResultSet allProds = s.executeQuery("select * from staff");
+            while (allProds.next()){
+                //printing out fields as are defined on the table ("users" table in this case)
+                System.out.println(allProds.getInt("id") +"\t"+
+                                   allProds.getString("firstName")+"\t"+
+                                   allProds.getString("lastName")+"\t"+
+                                   allProds.getInt("salary"));
+            }
+            allProds.close();
+        } catch (Exception e){
+            System.out.println("Error: "+e);
+        }
+    }
+}

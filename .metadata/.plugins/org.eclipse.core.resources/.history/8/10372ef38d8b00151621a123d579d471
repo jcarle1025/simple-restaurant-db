@@ -1,0 +1,66 @@
+package client;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+public class tester {
+    public static void main(String[] args) {
+        
+        myDB local = new myDB();
+//        myDB other = new myDB("otherDB", "root", "root");
+        
+        //returns bool -- remember to change project properties, libraries, and tell them to look at external to
+        //use for drivers (the derby jar) by addJAR/Directory
+        System.out.println(local.testConnection());
+//        System.out.println(other.testConnection());       
+//        local.resetDB();
+        local.addUser(3, "mitsos", "mitsos", "N"); 
+        local.deleteUser(2);
+        local.updateUserPassword(3, "TIPOTA");
+        
+        //always need a connection object -- and a statement to run on that connection
+        Connection c = local.getConn();
+        Statement s;
+        try{
+            s = c.createStatement();
+            //execute SQL command that are given as arguments
+            //selects all rows and cols from the users table and store them in a ResultSet called 'allUsers'
+            ResultSet allUsers = s.executeQuery("select * from users");
+            
+            while (allUsers.next()){
+                //printing out fields as are defined on the table ("users" table in this case)
+                System.out.println(allUsers.getInt("id") +"\t"+
+                                   allUsers.getString("username")+"\t"+
+                                   allUsers.getString("password")+"\t"+
+                                   allUsers.getString("is_admin"));
+            }
+            allUsers.close();
+            
+            ResultSet searchResults = local.findUserByName("I");
+            while (searchResults.next()){
+                    System.out.println(searchResults.getString("username"));
+            }
+                        
+        } catch (Exception e){
+            System.out.println("Error: "+e);
+        }
+        
+        try{
+            s = c.createStatement();
+            //execute SQL command that are given as arguments
+            //selects all rows and cols from the users table and store them in a ResultSet called 'allUsers'
+            ResultSet allProds = s.executeQuery("select * from products");
+            while (allProds.next()){
+                //printing out fields as are defined on the table ("users" table in this case)
+                System.out.println(allProds.getInt("id") +"\t"+
+                                   allProds.getString("pname")+"\t"+
+                                   allProds.getDouble("price")+"\t"+
+                                   allProds.getInt("quantity"));
+            }
+            allProds.close();
+        } catch (Exception e){
+            System.out.println("Error: "+e);
+        }
+    }
+}

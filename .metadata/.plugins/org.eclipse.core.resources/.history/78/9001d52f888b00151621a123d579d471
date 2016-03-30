@@ -1,0 +1,24 @@
+import java.io.Serializable;
+import java.util.ArrayList;
+
+//give at least 4 foods 
+public class Food extends Product implements Serializable{
+	private Meal meal;
+	private String name;
+	private int price;
+	
+	public Food(int id, String name, int price, Meal meal){
+		super(id, name, price, Category.FOOD);
+		this.name = name;
+		this.price = price;
+		this.meal = meal;
+	}
+
+	public Meal getMeal() {
+		return meal;
+	}
+
+	public void setMeal(Meal meal) {
+		this.meal = meal;
+	}
+}

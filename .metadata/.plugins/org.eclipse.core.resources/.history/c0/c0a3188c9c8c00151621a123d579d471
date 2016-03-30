@@ -1,0 +1,134 @@
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+
+public class MainApp extends JFrame implements ActionListener
+{
+    private final JMenuBar menuBar = new JMenuBar();
+    
+    private final JMenu file = new JMenu("File");
+    private final JMenu manage = new JMenu("Manage");
+    
+    private final JMenuItem open = new JMenuItem("Open");
+    private final JMenuItem save = new JMenuItem("Save");
+    private final JMenuItem exit = new JMenuItem("Exit");
+    private final JMenuItem refresh = new JMenuItem("Display/Refresh Menu");
+    private final JMenuItem staff = new JMenuItem("Display/Refresh Staff");
+    
+    private final JMenuItem Food = new JMenuItem("Food");
+    private final JMenuItem Drinks = new JMenuItem("Drinks");
+    private final JMenuItem Employees = new JMenuItem("Employees");
+    
+    private JTextArea men;
+    private JScrollPane jScrollPane = new JScrollPane();
+    
+    private RestaurantClass myMarket;
+    private MarketDB myMarketDB;
+
+    public MainApp() {
+        myMarket = new RestaurantClass();
+        myMarketDB = new MarketDB();
+        setSize(600, 400);
+        setLocationRelativeTo(null);
+        
+        file.add(open);
+        file.add(save);
+        file.add(refresh);
+        file.add(staff);
+        file.add(exit);
+        open.addActionListener(this);
+        save.addActionListener(this);
+        refresh.addActionListener(this);
+        staff.addActionListener(this);
+        exit.addActionListener(this);
+        
+        manage.add(Food);
+        manage.add(Drinks);
+        manage.add(Employees);
+        Food.addActionListener(this);
+        Drinks.addActionListener(this);
+        Employees.addActionListener(this);
+        
+        menuBar.add(file);
+        menuBar.add(manage);
+        
+        setLayout(new BorderLayout());
+        add(menuBar, BorderLayout.NORTH);
+        jScrollPane = new JScrollPane();
+        
+        men = new JTextArea();
+        men.setText(myMarket.printMenu());
+        add(men, BorderLayout.WEST);
+        
+        JLabel image = new JLabel(new ImageIcon("/Users/jcarle1025/Documents/ACG/OO Programming/Project/Market"));
+        add(image, BorderLayout.EAST);
+        
+	   	jScrollPane.getViewport().add(men, null);
+	   	getContentPane().add(jScrollPane);
+        
+        setVisible(true);
+    }
+    
+    public static void main(String[] args) {
+        new MainApp();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == exit) {
+        	int answer =JOptionPane.showConfirmDialog(this, "Are you sure?", 
+        			"Confirm Exit", JOptionPane.YES_NO_OPTION, 
+        			JOptionPane.QUESTION_MESSAGE);
+            if (answer == JOptionPane.YES_OPTION) {
+            	System.exit(0);
+            }
+        }
+        
+        else if(e.getSource() == Food){
+            new FoodDialog(myMarket);
+            men.setText(myMarket.printMenu());
+        }
+        else if(e.getSource() == Drinks){
+            new DrinkDialog(myMarket);
+            men.setText(myMarket.printMenu());
+        }
+        
+        else if(e.getSource() == Employees){
+            new EmployeeDialog(myMarket, myMarketDB);
+            men.setText(myMarket.printMenu());
+        }
+        
+        else if (e.getSource() == open){
+        	
+        }
+        
+        else if (e.getSource() == save){
+        	try {
+				myMarket.save("restaurant");
+			} catch (IOException e1) {
+				System.out.println("Error:");	
+				e1.printStackTrace();
+			}
+        }   
+        
+        else if (e.getSource() == refresh){
+        	men.setText(myMarket.printMenu());
+        }
+        
+        else if (e.getSource() == staff){
+        	men.setText(myMarket.printStaff());
+        }
+    }
+}

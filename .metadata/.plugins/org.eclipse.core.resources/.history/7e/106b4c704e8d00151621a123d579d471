@@ -1,0 +1,137 @@
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
+
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+
+public class FoodDialog extends JDialog implements ActionListener {
+	private JLabel nameLabel;
+	private JTextField nameTextField;
+	private JLabel mealLabel;
+	private JComboBox<Meal> mealComboBox;
+	private JLabel priceLabel;
+	private JSlider priceSlider;
+	private JTextArea allFoodsTextArea;
+	private JScrollPane scroller;
+	private JButton saveButton;
+	private JButton clearButton;
+	private JButton removeButton;
+	private JButton doneButton;
+	private JPanel top;
+	private JPanel buttons;
+	private RestaurantClass myMarket;
+	private MarketDB myMarketDB;
+	
+	public FoodDialog(RestaurantClass myMarket, MarketDB myMarketDB){
+		this.myMarket = myMarket;
+		this.myMarketDB = myMarketDB;
+		this.setBounds(100, 100, 450, 350);
+		this.setTitle("Manage Food Items");
+		nameLabel = new JLabel("Food's Name:");
+		nameTextField = new JTextField();
+
+		mealLabel = new JLabel("Meal: ");
+		mealComboBox = new JComboBox<Meal>();
+		mealComboBox.addItem(Meal.BREAKFAST);
+		mealComboBox.addItem(Meal.LUNCH);
+		mealComboBox.addItem(Meal.DINNER);
+		allFoodsTextArea = new JTextArea();
+		
+		priceLabel = new JLabel("Price: ");
+		priceSlider = new JSlider();
+		priceSlider.setPaintLabels(true);
+		priceSlider.setMinorTickSpacing(1);
+		priceSlider.setSnapToTicks(true);
+		priceSlider.setPaintTicks(true);
+		priceSlider.setMinimum(0);
+		priceSlider.setMaximum(20);
+		
+		saveButton = new JButton("Add");
+		saveButton.addActionListener(this);
+		clearButton = new JButton("Clear");
+		clearButton.addActionListener(this);
+	   	removeButton = new JButton("Remove");
+	   	removeButton.addActionListener(this);
+	   	doneButton = new JButton("Done");
+	   	doneButton.addActionListener(this);
+	   
+	   	scroller = new JScrollPane();
+	   
+	   	top = new JPanel();
+	   	top.setLayout(new GridLayout(4, 1));
+	   	top.add(nameLabel);
+	   	top.add(nameTextField);
+	   	top.add(priceLabel);
+	   	top.add(priceSlider);
+	   	top.add(mealLabel);
+	   	top.add(mealComboBox);
+	   
+	   	getContentPane().setLayout(new GridLayout(3, 2));//Rows, Columns
+	   	getContentPane().add(top);
+	   
+	   	buttons = new JPanel();
+	   	buttons.setLayout(new FlowLayout());
+	   	buttons.add(saveButton);
+	   	buttons.add(clearButton);
+	   	buttons.add(removeButton);
+	   	buttons.add(doneButton);
+	   	getContentPane().add(buttons);
+	   	getRootPane().setDefaultButton(saveButton);
+	   
+	   	scroller.getViewport().add(allFoodsTextArea, null);
+	   	getContentPane().add(scroller);
+	   
+	   	this.setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == saveButton){
+			String n = nameTextField.getText();
+			int p = priceSlider.getValue();
+			Meal m = (Meal) mealComboBox.getSelectedItem();
+			
+			int id = myMarket.numItems()+1;
+			System.out.println("market now has "+id+" foods");
+			Food f = new Food(myMarket.numFoods()+1, n,p,m);
+			myMarket.addFood(f);
+			
+			myMarketDB.addFoodItem(f.getId(), f.getName(), f.getPrice());
+			allFoodsTextArea.setText(myMarketDB.printFood());
+			nameTextField.setText("");
+		}
+		
+		else if (e.getSource() == clearButton){
+			myMarket.clearFoods();
+			myMarketDB.dropFoodTable();
+			myMarketDB.createFoodTable();
+			allFoodsTextArea.setText("Foods have been cleared.");
+			allFoodsTextArea.setText(myMarketDB.printFood());
+		}
+		
+		else if (e.getSource() == removeButton){
+			//another window to ask for item to remove and call that method in Menu
+			//make sure to check for valid name
+			new RemoveFoodDialog(myMarket);
+			allFoodsTextArea.setText("");
+			System.out.println(myMarketDB.printFood());
+			
+		}
+		
+		else if (e.getSource() == doneButton) {
+				dispose();
+		}
+	}
+}
